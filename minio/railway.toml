@@ -1,5 +1,5 @@
 [build]
-dockerfilePath = "minio/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckPath = "/minio/health/live"

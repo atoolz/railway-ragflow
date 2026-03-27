@@ -1,5 +1,5 @@
 [build]
-dockerfilePath = "redis/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckTimeout = 30

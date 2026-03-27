@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/infiniflow/ragflow/main/web/src/assets/logo-with-text.png" alt="RAGFlow" width="320">
+  <img src="assets/banner.svg" alt="RAGFlow on Railway" width="100%">
 </p>
 
 <p align="center">
-  <strong>RAGFlow on Railway. Deep document understanding RAG engine with one-click deploy.</strong>
+  <strong>Deep document understanding RAG engine with Elasticsearch, MySQL, MinIO, and Redis. One-click deploy to Railway.</strong>
 </p>
 
 <p align="center">
@@ -14,11 +14,12 @@
 
 <p align="center">
   <a href="https://github.com/atoolz/railway-ragflow/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/atoolz/railway-ragflow?style=flat-square&color=00c9a7" alt="License">
+    <img src="https://img.shields.io/github/license/atoolz/railway-ragflow?style=flat-square&color=7C3AED" alt="License">
   </a>
   <img src="https://img.shields.io/badge/RAGFlow-v0.24.0-7C3AED?style=flat-square" alt="RAGFlow v0.24.0">
-  <img src="https://img.shields.io/badge/Elasticsearch-8.11.3-005571?style=flat-square" alt="Elasticsearch 8.11.3">
+  <img src="https://img.shields.io/badge/Elasticsearch-8.11.3-F0BF24?style=flat-square" alt="Elasticsearch 8.11.3">
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square" alt="MySQL 8.0">
+  <img src="https://img.shields.io/badge/Redis-Valkey_8-DC382D?style=flat-square" alt="Redis">
 </p>
 
 <br>
@@ -27,117 +28,25 @@
 
 A production-ready deployment of [RAGFlow](https://github.com/infiniflow/ragflow), an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding. It provides truthful Q&A capabilities backed by well-founded citations from complex formatted data.
 
-| Service | Image | Role |
-|---------|-------|------|
-| **RAGFlow** | `infiniflow/ragflow:v0.24.0` | RAG engine with web UI, API, and document processing |
-| **Elasticsearch** | `elasticsearch:8.11.3` | Vector search and document indexing |
-| **MySQL** | `mysql:8.0.39` | Metadata, user data, and configuration storage |
-| **MinIO** | `minio/minio:latest` | S3-compatible object storage for documents |
-| **Redis** | `valkey/valkey:8` | Caching, sessions, and task queues |
+| Service | Technology | Role |
+|---------|-----------|------|
+| **RAGFlow** | infiniflow/ragflow v0.24.0 | RAG engine with web UI, REST API, and document processing |
+| **Elasticsearch** | Elasticsearch 8.11.3 | Vector search, document indexing, and full-text retrieval |
+| **MySQL** | MySQL 8.0 (Railway native) | Metadata, user data, and configuration storage |
+| **MinIO** | MinIO (S3-compatible) | Object storage for uploaded documents and files |
+| **Redis** | Valkey 8 (Railway native) | Caching, session management, and task queues |
 
 <br>
 
-## Key Features
+## Why RAGFlow
 
-- **Deep Document Understanding**: Extracts knowledge from PDFs, Word docs, Excel, PPTs, images, and more with layout-aware chunking
-- **Template-based Chunking**: Intelligent document parsing that preserves structure and context
-- **Multi-model Support**: Connect any LLM (OpenAI, Anthropic, local models via Ollama, etc.)
-- **Citation-backed Answers**: Every answer includes traceable references to source documents
-- **Agentic RAG**: Build complex RAG workflows with the visual agent editor
-- **MCP Server**: Built-in Model Context Protocol server for tool integration
+**Deep Document Understanding** goes beyond naive chunking. RAGFlow uses layout-aware parsing to extract knowledge from PDFs, Word, Excel, PPTs, and images while preserving document structure and context.
 
-<br>
+**Citation-backed Answers** means every response includes traceable references to source documents. No hallucinated answers, no guessing. Users can verify exactly where each piece of information came from.
 
-## Deploy to Railway
+**Multi-model Flexibility** lets you connect any LLM provider: OpenAI, Anthropic, DeepSeek, local models via Ollama, or any OpenAI-compatible API. Switch models without changing your knowledge base.
 
-Click the button above or:
-
-1. Fork this repo
-2. Create a new project on [Railway](https://railway.com)
-3. Add five services, each pointing to a subdirectory in this repo:
-
-| Service | Root Directory | Port |
-|---------|---------------|------|
-| RAGFlow | `ragflow/` | 80 |
-| Elasticsearch | `elasticsearch/` | 9200 |
-| MySQL | `mysql/` | 3306 |
-| MinIO | `minio/` | 9000 |
-| Redis | `redis/` | 6379 |
-
-4. Configure environment variables (see below)
-5. Set RAGFlow as the public-facing service
-6. Deploy
-
-<br>
-
-## Environment Variables
-
-### RAGFlow (required)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MYSQL_HOST` | `mysql` | MySQL service hostname (use Railway reference: `${{MySQL.RAILWAY_PRIVATE_DOMAIN}}`) |
-| `MYSQL_PORT` | `3306` | MySQL port |
-| `MYSQL_PASSWORD` | - | MySQL root password (use Railway reference: `${{MySQL.MYSQL_ROOT_PASSWORD}}`) |
-| `ES_HOST` | `es01` | Elasticsearch hostname (use Railway reference: `${{Elasticsearch.RAILWAY_PRIVATE_DOMAIN}}`) |
-| `ELASTIC_PASSWORD` | - | Elasticsearch password (use Railway reference: `${{Elasticsearch.ELASTIC_PASSWORD}}`) |
-| `MINIO_HOST` | `minio` | MinIO hostname (use Railway reference: `${{MinIO.RAILWAY_PRIVATE_DOMAIN}}`) |
-| `MINIO_PASSWORD` | - | MinIO password (use Railway reference: `${{MinIO.MINIO_ROOT_PASSWORD}}`) |
-| `REDIS_HOST` | `redis` | Redis hostname (use Railway reference: `${{Redis.RAILWAY_PRIVATE_DOMAIN}}`) |
-| `REDIS_PASSWORD` | - | Redis password (use Railway reference: `${{Redis.REDIS_PASSWORD}}`) |
-
-### RAGFlow (optional)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DOC_ENGINE` | `elasticsearch` | Document engine (`elasticsearch`, `opensearch`, `infinity`) |
-| `REGISTER_ENABLED` | `1` | Allow user registration (`1` = enabled, `0` = disabled) |
-| `DOC_BULK_SIZE` | `4` | Documents processed per batch |
-| `EMBEDDING_BATCH_SIZE` | `16` | Embeddings generated per batch |
-| `TZ` | `UTC` | Timezone |
-| `MAX_CONTENT_LENGTH` | `1073741824` | Max upload file size in bytes (1GB) |
-
-### Elasticsearch
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ELASTIC_PASSWORD` | - | Password for the `elastic` user (generate a strong one) |
-| `ES_JAVA_OPTS` | `-Xms1g -Xmx1g` | JVM heap size (adjust based on Railway plan) |
-
-### MySQL
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MYSQL_ROOT_PASSWORD` | - | Root password (generate a strong one) |
-| `MYSQL_DATABASE` | `rag_flow` | Database name |
-
-### MinIO
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MINIO_ROOT_USER` | `rag_flow` | MinIO access key |
-| `MINIO_ROOT_PASSWORD` | - | MinIO secret key (generate a strong one) |
-
-### Redis
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `REDIS_PASSWORD` | - | Redis password (generate a strong one) |
-
-<br>
-
-## Resource Requirements
-
-RAGFlow is a resource-intensive application. Recommended minimums for Railway:
-
-| Service | RAM | Storage |
-|---------|-----|---------|
-| RAGFlow | 4 GB | 2 GB |
-| Elasticsearch | 2 GB | 20 GB |
-| MySQL | 1 GB | 10 GB |
-| MinIO | 512 MB | 50 GB |
-| Redis | 512 MB | 1 GB |
-| **Total** | **~8 GB** | **~83 GB** |
+**Agentic RAG** provides a visual workflow editor for building complex retrieval pipelines. Combine multiple knowledge bases, add reasoning steps, and create sophisticated Q&A workflows without code.
 
 <br>
 
@@ -169,6 +78,83 @@ RAGFlow is a resource-intensive application. Recommended minimums for Railway:
 
 <br>
 
+## Deploy to Railway
+
+Click the button above or:
+
+1. Fork this repo
+2. Create a new project on [Railway](https://railway.com)
+3. Add a **MySQL** database (Railway native)
+4. Add a **Redis** database (Railway native)
+5. Add three services from your forked repo, each pointing to a subdirectory:
+
+| Service | Root Directory | Port |
+|---------|---------------|------|
+| RAGFlow | `ragflow/` | 80 |
+| Elasticsearch | `elasticsearch/` | 9200 |
+| MinIO | `minio/` | 9000 |
+
+6. Set environment variables on RAGFlow (see below) referencing the other services
+7. Generate a domain for the RAGFlow service
+8. Deploy
+
+<br>
+
+## Environment Variables
+
+### RAGFlow
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `MYSQL_HOST` | Yes | - | `${{MySQL.RAILWAY_PRIVATE_DOMAIN}}` |
+| `MYSQL_PORT` | No | `3306` | MySQL port |
+| `MYSQL_PASSWORD` | Yes | - | `${{MySQL.MYSQL_ROOT_PASSWORD}}` |
+| `MYSQL_DBNAME` | No | `rag_flow` | Database name |
+| `MYSQL_USER` | No | `root` | Database user |
+| `ES_HOST` | Yes | - | `${{Elasticsearch.RAILWAY_PRIVATE_DOMAIN}}` |
+| `ELASTIC_PASSWORD` | Yes | - | `${{Elasticsearch.ELASTIC_PASSWORD}}` |
+| `MINIO_HOST` | Yes | - | `${{MinIO.RAILWAY_PRIVATE_DOMAIN}}` |
+| `MINIO_PASSWORD` | Yes | - | `${{MinIO.MINIO_ROOT_PASSWORD}}` |
+| `MINIO_USER` | No | `rag_flow` | MinIO access key |
+| `MINIO_PORT` | No | `9000` | MinIO API port |
+| `REDIS_HOST` | Yes | - | `${{Redis.RAILWAY_PRIVATE_DOMAIN}}` |
+| `REDIS_PASSWORD` | Yes | - | `${{Redis.REDIS_PASSWORD}}` |
+| `REDIS_PORT` | No | `6379` | Redis port |
+| `DOC_ENGINE` | No | `elasticsearch` | Vector DB engine |
+| `REGISTER_ENABLED` | No | `1` | User registration (`1` = on, `0` = off) |
+| `TZ` | No | `UTC` | Timezone |
+
+### Elasticsearch
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `ELASTIC_PASSWORD` | Yes | - | Password for the `elastic` user |
+| `ES_JAVA_OPTS` | No | `-Xms1g -Xmx1g` | JVM heap size |
+
+### MinIO
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `MINIO_ROOT_USER` | No | `rag_flow` | MinIO access key |
+| `MINIO_ROOT_PASSWORD` | Yes | - | MinIO secret key |
+
+<br>
+
+## Resource Requirements
+
+RAGFlow is resource-intensive. Recommended minimums:
+
+| Service | RAM | Storage |
+|---------|-----|---------|
+| RAGFlow | 4 GB | 2 GB |
+| Elasticsearch | 2 GB | 20 GB |
+| MySQL | 1 GB | 10 GB |
+| MinIO | 512 MB | 50 GB |
+| Redis | 512 MB | 1 GB |
+| **Total** | **~8 GB** | **~83 GB** |
+
+<br>
+
 ## After Deployment
 
 1. Access the RAGFlow web UI through the public URL Railway assigns
@@ -177,6 +163,17 @@ RAGFlow is a resource-intensive application. Recommended minimums for Railway:
 4. Create a **Knowledge Base** and upload your documents
 5. Create an **Assistant** linked to your knowledge base
 6. Start asking questions with citation-backed answers
+
+<br>
+
+## Key Features
+
+- **Template-based Chunking** preserves document structure during parsing
+- **Multi-format Support** handles PDF, Word, Excel, PPT, images, markdown, and more
+- **Visual Agent Editor** for building complex RAG workflows without code
+- **MCP Server** built-in for Model Context Protocol tool integration
+- **REST API** for programmatic access to all RAGFlow capabilities
+- **Multi-tenant** with user registration and role-based access
 
 <br>
 

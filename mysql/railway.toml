@@ -1,5 +1,5 @@
 [build]
-dockerfilePath = "mysql/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckTimeout = 60
