@@ -41,13 +41,13 @@ proxy_send_timeout 3600s;
 PROXY
 fi
 
-# Debug: list nginx configs
-echo "=== nginx.conf ==="
-head -5 /etc/nginx/nginx.conf
+# Debug: find ragflow nginx configs
+echo "=== Looking for ragflow nginx configs ==="
+find / -name "ragflow.conf*" -o -name "ragflow*.conf" 2>/dev/null | head -20
+echo "=== Looking for nginx conf dirs ==="
+find /etc/nginx -type f 2>/dev/null
 echo "=== conf.d contents ==="
 ls -la /etc/nginx/conf.d/
-echo "=== proxy.conf exists ==="
-ls -la /etc/nginx/proxy.conf 2>&1 || echo "MISSING"
 
 # Run the original entrypoint
 exec /ragflow/entrypoint.sh "$@"
