@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://railway.com/template/ragflow">
+  <a href="https://railway.com/deploy/ragflow">
     <img src="https://railway.com/button.svg" alt="Deploy on Railway">
   </a>
 </p>
