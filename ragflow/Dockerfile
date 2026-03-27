@@ -1,37 +1,3 @@
 FROM infiniflow/ragflow:v0.24.0
 
-# Override nginx config to remove embedded default server block
-COPY nginx.conf /etc/nginx/nginx.conf
-# Remove any default configs so only ragflow.conf (created by entrypoint) is active
-RUN rm -f /etc/nginx/conf.d/default.conf /etc/nginx/sites-enabled/default 2>/dev/null; true
-
-ENV MYSQL_HOST=mysql
-ENV MYSQL_PORT=3306
-ENV MYSQL_DBNAME=rag_flow
-ENV MYSQL_USER=root
-ENV MYSQL_PASSWORD=infini_rag_flow
-ENV MYSQL_MAX_PACKET=1073741824
-
-ENV MINIO_HOST=minio
-ENV MINIO_PORT=9000
-ENV MINIO_USER=rag_flow
-ENV MINIO_PASSWORD=infini_rag_flow
-
-ENV ES_HOST=es01
-ENV ELASTIC_PASSWORD=infini_rag_flow
-
-ENV REDIS_HOST=redis
-ENV REDIS_PORT=6379
-ENV REDIS_PASSWORD=infini_rag_flow
-
-ENV DOC_ENGINE=elasticsearch
-ENV DEVICE=cpu
-ENV API_PROXY_SCHEME=python
-ENV REGISTER_ENABLED=1
-ENV DOC_BULK_SIZE=4
-ENV EMBEDDING_BATCH_SIZE=16
-ENV TZ=UTC
-ENV THREAD_POOL_MAX_WORKERS=128
-ENV DISABLE_PASSWORD_LOGIN=false
-
 EXPOSE 80 9380
