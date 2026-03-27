@@ -37,12 +37,12 @@ server {
     gzip_vary on;
 
     location ~ ^/api/v1/admin {
-        proxy_pass http://localhost:9381;
+        proxy_pass http://127.0.0.1:9381;
         include proxy.conf;
     }
 
     location ~ ^/(v1|api) {
-        proxy_pass http://localhost:9380;
+        proxy_pass http://127.0.0.1:9380;
         include proxy.conf;
     }
 
