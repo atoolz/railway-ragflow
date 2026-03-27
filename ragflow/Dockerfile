@@ -1,5 +1,8 @@
 FROM infiniflow/ragflow:v0.24.0
 
+# Remove default nginx config so ragflow.conf serves as default
+RUN rm -f /etc/nginx/conf.d/default.conf
+
 ENV MYSQL_HOST=mysql
 ENV MYSQL_PORT=3306
 ENV MYSQL_DBNAME=rag_flow
