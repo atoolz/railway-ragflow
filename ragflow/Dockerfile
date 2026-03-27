@@ -1,8 +1,9 @@
 FROM infiniflow/ragflow:v0.24.0
 
-# Replace all nginx server configs with a simple proxy to the RAGFlow backend
-RUN rm -f /etc/nginx/conf.d/*.conf /etc/nginx/sites-enabled/* 2>/dev/null; true
-COPY nginx-default.conf /etc/nginx/conf.d/default.conf
+# Override nginx config to remove embedded default server block
+COPY nginx.conf /etc/nginx/nginx.conf
+# Remove any default configs so only ragflow.conf (created by entrypoint) is active
+RUN rm -f /etc/nginx/conf.d/default.conf /etc/nginx/sites-enabled/default 2>/dev/null; true
 
 ENV MYSQL_HOST=mysql
 ENV MYSQL_PORT=3306
