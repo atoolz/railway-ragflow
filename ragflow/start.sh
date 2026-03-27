@@ -75,5 +75,35 @@ fi
 # Remove default configs
 rm -f /etc/nginx/conf.d/default.conf
 
+# Wait for Elasticsearch to be ready before starting RAGFlow
+if [ -n "$ES_HOST" ]; then
+    echo "Waiting for Elasticsearch at $ES_HOST:9200..."
+    for i in $(seq 1 60); do
+        if curl -sf -u "elastic:${ELASTIC_PASSWORD}" "http://${ES_HOST}:9200/" > /dev/null 2>&1; then
+            echo "Elasticsearch is ready after ${i}s"
+            break
+        fi
+        if [ "$i" -eq 60 ]; then
+            echo "WARNING: Elasticsearch not ready after 60s, starting anyway..."
+        fi
+        sleep 2
+    done
+fi
+
+# Wait for MySQL to be ready
+if [ -n "$MYSQL_HOST" ]; then
+    echo "Waiting for MySQL at $MYSQL_HOST:${MYSQL_PORT:-3306}..."
+    for i in $(seq 1 30); do
+        if mysqladmin ping -h "$MYSQL_HOST" -P "${MYSQL_PORT:-3306}" -u "${MYSQL_USER:-root}" -p"$MYSQL_PASSWORD" --silent 2>/dev/null; then
+            echo "MySQL is ready after ${i}s"
+            break
+        fi
+        if [ "$i" -eq 30 ]; then
+            echo "WARNING: MySQL not ready after 30s, starting anyway..."
+        fi
+        sleep 2
+    done
+fi
+
 # Run the original entrypoint
 exec /ragflow/entrypoint.sh "$@"
