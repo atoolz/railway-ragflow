@@ -1,0 +1,112 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "services": {
+    "ragflow": {
+      "source": {
+        "repo": "atoolz/railway-ragflow",
+        "rootDirectory": "ragflow"
+      },
+      "variables": {
+        "MYSQL_HOST": { "$ref": "mysql" },
+        "MYSQL_PORT": "3306",
+        "MYSQL_DBNAME": "rag_flow",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": { "$ref": "MYSQL_ROOT_PASSWORD" },
+        "MYSQL_MAX_PACKET": "1073741824",
+        "MINIO_HOST": { "$ref": "minio" },
+        "MINIO_PORT": "9000",
+        "MINIO_USER": "rag_flow",
+        "MINIO_PASSWORD": { "$ref": "MINIO_ROOT_PASSWORD" },
+        "ES_HOST": { "$ref": "elasticsearch" },
+        "ELASTIC_PASSWORD": { "$ref": "ELASTIC_PASSWORD" },
+        "REDIS_HOST": { "$ref": "redis" },
+        "REDIS_PORT": "6379",
+        "REDIS_PASSWORD": { "$ref": "REDIS_PASSWORD" },
+        "DOC_ENGINE": "elasticsearch",
+        "DEVICE": "cpu",
+        "API_PROXY_SCHEME": "python",
+        "REGISTER_ENABLED": "1",
+        "TZ": "UTC"
+      },
+      "networking": {
+        "port": 80
+      }
+    },
+    "elasticsearch": {
+      "source": {
+        "repo": "atoolz/railway-ragflow",
+        "rootDirectory": "elasticsearch"
+      },
+      "variables": {
+        "ELASTIC_PASSWORD": {
+          "description": "Elasticsearch password",
+          "required": true,
+          "generate": true
+        }
+      },
+      "networking": {
+        "port": 9200,
+        "public": false
+      }
+    },
+    "minio": {
+      "source": {
+        "repo": "atoolz/railway-ragflow",
+        "rootDirectory": "minio"
+      },
+      "variables": {
+        "MINIO_ROOT_USER": "rag_flow",
+        "MINIO_ROOT_PASSWORD": {
+          "description": "MinIO root password",
+          "required": true,
+          "generate": true
+        }
+      },
+      "networking": {
+        "port": 9000,
+        "public": false
+      }
+    },
+    "mysql": {
+      "source": {
+        "repo": "atoolz/railway-ragflow",
+        "rootDirectory": "mysql"
+      },
+      "variables": {
+        "MYSQL_ROOT_PASSWORD": {
+          "description": "MySQL root password",
+          "required": true,
+          "generate": true
+        },
+        "MYSQL_DATABASE": "rag_flow"
+      },
+      "networking": {
+        "port": 3306,
+        "public": false
+      },
+      "volumes": {
+        "mysql_data": "/var/lib/mysql"
+      }
+    },
+    "redis": {
+      "source": {
+        "repo": "atoolz/railway-ragflow",
+        "rootDirectory": "redis"
+      },
+      "variables": {
+        "REDIS_PASSWORD": {
+          "description": "Redis password",
+          "required": true,
+          "generate": true
+        }
+      },
+      "networking": {
+        "port": 6379,
+        "public": false
+      },
+      "volumes": {
+        "redis_data": "/data"
+      }
+    }
+  }
+}

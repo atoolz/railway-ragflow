@@ -1,0 +1,8 @@
+[build]
+dockerfilePath = "minio/Dockerfile"
+
+[deploy]
+healthcheckPath = "/minio/health/live"
+healthcheckTimeout = 60
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
