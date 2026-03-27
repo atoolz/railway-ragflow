@@ -24,9 +24,42 @@
 
 <br>
 
+## Deploy and Host RAGFlow on Railway
+
+RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine built on deep document understanding. It extracts knowledge from PDFs, Word docs, Excel, PPTs, images, and more using layout-aware parsing that preserves document structure. Every answer comes with traceable citations to source documents. Connect any LLM provider, build complex retrieval workflows with the visual agent editor, and deploy the full stack in one click.
+
+### About Hosting RAGFlow
+
+The template deploys five services on Railway's private network. RAGFlow runs as a Docker container (~5GB image) with nginx serving the React frontend and proxying API requests to the Python backend on port 9380. Elasticsearch handles vector search and document indexing. MySQL stores metadata, user data, and configuration. MinIO provides S3-compatible object storage for uploaded documents. Redis manages caching, sessions, and task queues. All services communicate over Railway's internal network using private domains. The RAGFlow container uses a custom start script that configures nginx at runtime and delegates to the original entrypoint for database initialization and worker processes.
+
+### Common Use Cases
+
+- Building internal knowledge bases from company documents (contracts, manuals, policies) with citation-backed Q&A accessible to the entire team
+- Deploying a self-hosted alternative to ChatGPT with your own data, keeping sensitive documents on infrastructure you control
+- Creating customer support assistants that answer questions from product documentation, FAQs, and support tickets with source references
+
+### Dependencies for Hosting
+
+- A Railway account with sufficient resources (~8GB RAM total across services, ~83GB storage)
+- An LLM API key (OpenAI, Anthropic, DeepSeek, or any OpenAI-compatible endpoint) configured after first login
+
+#### Deployment Dependencies
+
+- [RAGFlow documentation](https://ragflow.io/docs/)
+- [Elasticsearch reference](https://www.elastic.co/guide/en/elasticsearch/reference/8.11/index.html)
+- [MinIO documentation](https://min.io/docs/minio/container/index.html)
+
+### Why Deploy on Railway?
+
+Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
+
+By deploying RAGFlow on Railway, you are one step closer to supporting a complete AI-powered knowledge base with minimal burden. Host your servers, databases, AI agents, and more on Railway.
+
+<br>
+
 ## What's Inside
 
-A production-ready deployment of [RAGFlow](https://github.com/infiniflow/ragflow), an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding. It provides truthful Q&A capabilities backed by well-founded citations from complex formatted data.
+A production-ready deployment of [RAGFlow](https://github.com/infiniflow/ragflow) with all required infrastructure services configured and connected.
 
 | Service | Technology | Role |
 |---------|-----------|------|
@@ -78,6 +111,17 @@ A production-ready deployment of [RAGFlow](https://github.com/infiniflow/ragflow
 
 <br>
 
+## Key Features
+
+- **Template-based Chunking** preserves document structure during parsing
+- **Multi-format Support** handles PDF, Word, Excel, PPT, images, markdown, and more
+- **Visual Agent Editor** for building complex RAG workflows without code
+- **MCP Server** built-in for Model Context Protocol tool integration
+- **REST API** for programmatic access to all RAGFlow capabilities
+- **Multi-tenant** with user registration and role-based access
+
+<br>
+
 ## Deploy to Railway
 
 Click the button above or:
@@ -100,6 +144,17 @@ Click the button above or:
 
 <br>
 
+## After Deployment
+
+1. Access the RAGFlow web UI through the public URL Railway assigns
+2. Create an admin account on first visit
+3. Go to **Model Providers** and configure at least one LLM (OpenAI, Anthropic, Ollama, etc.)
+4. Create a **Knowledge Base** and upload your documents
+5. Create an **Assistant** linked to your knowledge base
+6. Start asking questions with citation-backed answers
+
+<br>
+
 ## Environment Variables
 
 ### RAGFlow
@@ -119,9 +174,11 @@ Click the button above or:
 | `MINIO_PORT` | No | `9000` | MinIO API port |
 | `REDIS_HOST` | Yes | - | `${{Redis.RAILWAY_PRIVATE_DOMAIN}}` |
 | `REDIS_PASSWORD` | Yes | - | `${{Redis.REDIS_PASSWORD}}` |
+| `REDIS_USERNAME` | No | `default` | Redis username (Railway native uses `default`) |
 | `REDIS_PORT` | No | `6379` | Redis port |
 | `DOC_ENGINE` | No | `elasticsearch` | Vector DB engine |
 | `REGISTER_ENABLED` | No | `1` | User registration (`1` = on, `0` = off) |
+| `PORT` | No | `80` | Port Railway routes traffic to |
 | `TZ` | No | `UTC` | Timezone |
 
 ### Elasticsearch
@@ -152,28 +209,6 @@ RAGFlow is resource-intensive. Recommended minimums:
 | MinIO | 512 MB | 50 GB |
 | Redis | 512 MB | 1 GB |
 | **Total** | **~8 GB** | **~83 GB** |
-
-<br>
-
-## After Deployment
-
-1. Access the RAGFlow web UI through the public URL Railway assigns
-2. Create an admin account on first visit
-3. Go to **Model Providers** and configure at least one LLM (OpenAI, Anthropic, Ollama, etc.)
-4. Create a **Knowledge Base** and upload your documents
-5. Create an **Assistant** linked to your knowledge base
-6. Start asking questions with citation-backed answers
-
-<br>
-
-## Key Features
-
-- **Template-based Chunking** preserves document structure during parsing
-- **Multi-format Support** handles PDF, Word, Excel, PPT, images, markdown, and more
-- **Visual Agent Editor** for building complex RAG workflows without code
-- **MCP Server** built-in for Model Context Protocol tool integration
-- **REST API** for programmatic access to all RAGFlow capabilities
-- **Multi-tenant** with user registration and role-based access
 
 <br>
 
