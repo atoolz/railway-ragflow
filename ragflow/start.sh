@@ -1,3 +1,8 @@
+#!/bin/bash
+# Remove any default nginx config and ensure ragflow config is active
+rm -f /etc/nginx/conf.d/default.conf
+# If nginx.conf has a server block, replace it with a clean one
+cat > /etc/nginx/nginx.conf << 'NGINX'
 user root;
 worker_processes auto;
 error_log /var/log/nginx/error.log notice;
@@ -16,3 +21,7 @@ http {
 
     include /etc/nginx/conf.d/*.conf;
 }
+NGINX
+
+# Run the original entrypoint
+exec /ragflow/entrypoint.sh "$@"
